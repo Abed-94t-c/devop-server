@@ -1,19 +1,13 @@
-se a Node.js base image
-FROM node:14
+# Use the NGINX base image
+FROM nginx:latest
 
-# Set the working directory inside the container
-WORKDIR /app
+# Copy the application files to the NGINX html directory
+COPY server.js /usr/share/nginx/html/
+COPY package.json /usr/share/nginx/html/
 
-# Copy package.json and install dependencies
-COPY package.json .
-RUN npm install
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
 
-# Copy the application code
-COPY . .
-
-# Expose the application port
-EXPOSE 8080
-
-# Define the default command
-CMD ["node", "server.js"]
+# Default command to keep NGINX running
+CMD ["nginx", "-g", "daemon off;"]
 
