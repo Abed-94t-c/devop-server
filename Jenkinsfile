@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_CREDS = credentials('docker') // Replace 'docker' with your Jenkins credentials ID
+        DOCKERHUB_CREDS = credentials('docker') 
     }
     stages {
         stage('Docker Image Build') {
@@ -37,16 +37,16 @@ pipeline {
             }
         }
 
-        // stage('Deploy') {
-        //     steps {
-        //         sshagent(['jenkins-k8s-ssh-key']) { // Replace 'jenkins-k8s-ssh-key' with your SSH credentials ID
-        //             sh '''
-        //                 echo "Deployment step via SSH"
-        //                 # Add your deployment commands here, e.g., kubectl apply -f deployment.yml
-        //             '''
-        //         }
-        //     }
-        // }
+         stage('Deploy') {
+             steps {
+                 sshagent(['jenkins-ssh-key']) { 
+                     sh '''
+                        echo "Deployment step via SSH"
+                        # Add your deployment commands here, e.g., kubectl apply -f deployment.yml
+                    '''
+                 }
+             }
+         }
     }
 }
 
