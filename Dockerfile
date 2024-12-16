@@ -1,4 +1,4 @@
-# Use a Node.js base image
+se a Node.js base image
 FROM node:14
 
 # Set the working directory inside the container
@@ -16,3 +16,4 @@ EXPOSE 8080
 
 # Define the default command
 CMD ["node", "server.js"]
+
