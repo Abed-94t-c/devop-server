@@ -42,7 +42,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent(['jenkins-k8s-ssh-key']) {
+                sshagent(['jenkins-ssh-key']) {
                     sh '''
                     echo "Deployment step via SSH"
                     # Add deployment commands to Kubernetes here
