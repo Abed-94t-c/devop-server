@@ -42,7 +42,7 @@ pipeline {
                  sshagent(['jenkins-ssh-key']) { 
                      sh '''
                         echo "Deployment step via SSH"
-//                        # Add your deployment commands here, e.g., kubectl apply -f deployment.yml
+                        kubectl apply -f deployment.yml
                     '''
                  }
              }
