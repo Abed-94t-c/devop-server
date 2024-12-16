@@ -1,8 +1,10 @@
 pipeline {
     agent any
+
     environment {
-        DOCKERHUB_CREDS = credentials('docker') 
+        DOCKERHUB_CREDS = credentials('docker') // Assuming your DockerHub credentials ID
     }
+
     stages {
         stage('Docker Image Build') {
             steps {
@@ -16,11 +18,12 @@ pipeline {
             steps {
                 echo 'Testing Docker Image...'
                 sh '''
-                    docker image inspect abed218/cw2-server:1.0
-                    docker run --name test-container -p 8081:8080 -d abed218/cw2-server:1.0
-                    docker ps
-                    docker stop test-container
-                    docker rm test-container
+                docker rm -f test-container || true
+                docker image inspect abed218/cw2-server:1.0
+                docker run --name test-container -p 8081:8080 -d abed218/cw2-server:1.0
+                docker ps
+                docker stop test-container
+                docker rm test-container
                 '''
             }
         }
@@ -37,16 +40,16 @@ pipeline {
             }
         }
 
-         stage('Deploy') {
-             steps {
-                 sshagent(['jenkins-ssh-key']) { 
-                     sh '''
-                        echo "Deployment step via SSH"
-                      
+        stage('Deploy') {
+            steps {
+                sshagent(['jenkins-k8s-ssh-key']) {
+                    sh '''
+                    echo "Deployment step via SSH"
+                    # Add deployment commands to Kubernetes here
                     '''
-                 }
-             }
-         }
+                }
+            }
+        }
     }
 }
 
