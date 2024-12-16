@@ -1,8 +1,10 @@
 pipeline {
     agent any
+
     environment {
-        DOCKERHUB_CREDS = credentials('docker') // Your DockerHub credentials
+        DOCKERHUB_CREDS = credentials('docker') // Assuming your DockerHub credentials ID
     }
+
     stages {
         stage('Docker Image Build') {
             steps {
@@ -11,6 +13,7 @@ pipeline {
                 echo 'Docker Image built successfully!'
             }
         }
+
         stage('Test Docker Image') {
             steps {
                 echo 'Testing Docker Image...'
@@ -24,23 +27,25 @@ pipeline {
                 '''
             }
         }
+
         stage('DockerHub Login') {
             steps {
                 sh 'echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
             }
         }
+
         stage('DockerHub Image Push') {
             steps {
                 sh 'docker push abed218/cw2-server:1.0'
             }
         }
-        stage('Update Kubernetes Deployment') {
+
+        stage('Deploy') {
             steps {
-                echo 'Updating Kubernetes Deployment...'
-                sshagent(['jenkins-ssh-key']) { // Use your Jenkins SSH key for connecting to the Kubernetes server
+                sshagent(['jenkins-ssh-key']) {
                     sh '''
-                    kubectl set image deployment/cw2-server-deployment cw2-server-container=abed218/cw2-server:1.0 --record
-                    kubectl rollout status deployment/cw2-server-deployment
+                    echo "Deployment step via SSH"
+                    # Add deployment commands to Kubernetes here
                     '''
                 }
             }
